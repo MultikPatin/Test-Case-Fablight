@@ -1,4 +1,4 @@
-export PYTHONPATH=$SRC_PATH
-poetry run alembic upgrade head
-cd "$APP_DIR" || exit
+export PYTHONPATH=/opt
+alembic upgrade head
+cd migrations || exit
 rm Dockerfile

@@ -1,28 +1,51 @@
-FROM python:3.11-slim
+FROM python:3.11-slim as requirements-stage
 
-ENV SRC_PATH '/app'
-ENV APP_DIR 'migrations'
+WORKDIR /tmp
 
-WORKDIR $SRC_PATH
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_DEFAULT_TIMEOUT=100 \
+    \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_VIRTUALENVS_IN_PROJECT=false \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VERSION=1.7.1
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+RUN pip install --upgrade pip && \
+    pip install "poetry==$POETRY_VERSION"
 
-COPY poetry.lock pyproject.toml ./
+COPY ./pyproject.toml ./poetry.lock* /tmp/
 
-RUN python -m pip install --no-cache-dir poetry==1.7.1 \
-    && poetry install --extras migrations \
-    && rm -rf $(poetry config cache-dir)/{cache,artifacts}
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --extras migrations
 
-COPY ./${APP_DIR} ./${APP_DIR}
-COPY ./src/core/db/entities ./src/core/db/entities
-COPY ./src/core/configs/__init__.py ./src/core/configs/__init__.py
-COPY ./src/core/configs/base.py ./src/core/configs/base.py
-COPY ./src/core/configs/postgres.py ./src/core/configs/postgres.py
-COPY ./src/core/utils/__init__.py ./src/core/utils/__init__.py
-COPY ./src/core/utils/sqlalchemy.py ./src/core/utils/sqlalchemy.py
+
+FROM python:3.11-slim-buster
+
+WORKDIR /opt/migrations
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends netcat && \
+    apt-get install -y --no-install-recommends gettext
+
+COPY --from=requirements-stage /tmp/requirements.txt ./requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r ./requirements.txt
+
+COPY ./migrations ./migrations
+COPY ./src/db/entities ./src/db/entities
+COPY ./src/configs ./src/configs
+COPY ./src/utils/__init__.py ./src/utils/__init__.py
+COPY ./src/utils/settings.py ./src/utils/settings.py
+COPY ./src/utils/sqlalchemy.py ./src/utils/sqlalchemy.py
 COPY ./alembic.ini ./
 
-RUN chmod +x ${APP_DIR}/entrypoint.sh
+RUN sed -i 's/\r$//g'  ./migrations/entrypoint.sh && \
+    chmod +x  ./migrations/entrypoint.sh
 
-ENTRYPOINT ["/bin/bash", "-c", "exec ${SRC_PATH}/${APP_DIR}/entrypoint.sh"]
+EXPOSE 5000
+
+ENTRYPOINT ["sh", "migrations/entrypoint.sh"]

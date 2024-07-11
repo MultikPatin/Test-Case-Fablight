@@ -1,8 +1,3 @@
-from logging import config as logging_config
-
-from async_fastapi_jwt_auth import AuthJWT
-
-from src.configs.logger import LOGGING
 from src.configs.postgres import PostgresSettings
 from src.configs.redis import RedisSettings
 from src.configs.token import TokenSettings
@@ -19,8 +14,6 @@ __all__ = [
     "RedisSettings",
 ]
 
-logging_config.dictConfig(LOGGING)
-
 
 class AppSettings(FastApiSettings):
     pass
@@ -36,11 +29,18 @@ class Settings(EnvSettings):
 
 settings = Settings()
 
+if not settings.start_up.migrations:
+    from logging import config as logging_config
 
-@AuthJWT.load_config
-def get_config():
-    return Settings().token
+    from src.configs.logger import LOGGING
+    from async_fastapi_jwt_auth import AuthJWT
 
+    logging_config.dictConfig(LOGGING)
+
+
+    @AuthJWT.load_config
+    def get_config():
+        return Settings().token
 
 if settings.app.debug:
     print(settings.model_dump())

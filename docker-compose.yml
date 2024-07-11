@@ -26,8 +26,11 @@ services:
   migrations:
     build:
       dockerfile: ./migrations/Dockerfile
-    container_name: migrations_auth
+    container_name: migrations
+    env_file:
+      - .env
     environment:
+      - MIGRATIONS=True
       - LOCAL=False
       - DEBUG=False
       - POSTGRES_DB=${POSTGRES_DB}

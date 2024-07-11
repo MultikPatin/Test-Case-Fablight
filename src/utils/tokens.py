@@ -22,7 +22,6 @@ class TokenUtils:
         self.__settings = settings
 
     async def delete_oldest_token_if_necessary(self, user_uuid: str) -> None:
-        # TODO Возможно ли лучше?)
         tokens = await self.__cache.get_tokens(user_uuid)
         if not tokens:
             return
@@ -68,7 +67,6 @@ class TokenUtils:
         await self.set_tokens_to_cookies(tokens)
         await self.delete_oldest_token_if_necessary(user_claims.user_uuid)
         await self.__cache.set_token(user_claims.user_uuid, tokens.refresh)
-        # TODO Нотификация с логирование пользователя
 
 
 @lru_cache

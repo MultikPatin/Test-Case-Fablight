@@ -5,7 +5,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy import delete, func, select
 
-from db.entities import Entity
+from src.db.entities import Entity
 from src.db.clients.postgres import PostgresDatabase
 from src.db.repositories.abstract import (
     AbstractRepository,
@@ -89,10 +89,10 @@ class PostgresRepository(
             )
             return db_obj.scalars().first()
 
-    async def get_uuid_filter_by(self, **kwargs) -> str | None:
+    async def get_filter_by(self, **kwargs) -> Model | None:
         if not kwargs:
             raise ValueError("Filter by is empty")
         async with self._database.get_session() as session:
-            db_obj = await session.execute(select(self._model.uuid).filter_by(**kwargs))
-            obj_uuid = db_obj.scalars().first()
-            return obj_uuid
+            db_obj = await session.execute(select(self._model).filter_by(**kwargs))
+            obj = db_obj.scalars().first()
+            return obj

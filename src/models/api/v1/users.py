@@ -7,7 +7,6 @@ from src.models.api.v1.base import (
     TimeMixin,
     UUIDMixin,
 )
-from src.models.api.v1.roles import ResponseRoleShort
 from src.utils.pagination import PaginatedMixin
 
 
@@ -45,7 +44,6 @@ class ResponseUser(RequestUserUpdate, UUIDMixin, TimeMixin):
         description="Флаг - является ли пользователь администратором",
         examples=[False],
     )
-    role_uuid: UUID | None
 
 
 class ResponseUserShort(RequestUserUpdate, UUIDMixin):
@@ -61,5 +59,3 @@ class ResponseUsersPaginated(PaginatedMixin):
     users: list[ResponseUser]
 
 
-class ResponseUserExtended(ResponseUserShort):
-    role: ResponseRoleShort

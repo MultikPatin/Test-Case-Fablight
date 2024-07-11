@@ -44,7 +44,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-include_router(
+app.include_router(
     users.router,
     prefix="/auth/v1/users",
     tags=["users"],

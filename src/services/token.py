@@ -37,7 +37,7 @@ class TokenService:
         self._token = token
 
     async def login(self, body: RequestLogin, request: Request) -> ResponseUser:
-        user = await self._user_repository.get_by_email(body.email)
+        user = await self._user_repository.get_filter_by(email=body.email)
         if not user:
             raise HTTPException(
                 status_code=HTTPStatus.UNAUTHORIZED,
@@ -48,12 +48,8 @@ class TokenService:
                 status_code=HTTPStatus.UNAUTHORIZED,
                 detail="Bad username or password",
             )
-        user_data = UserClaims(user_uuid=str(user.uuid), role_uuid=str(user.role_uuid))
-        tokens = await self._token.create_tokens(user_data)
-
-        await self._token.set_tokens_to_cookies(tokens)
-        await self._token.delete_oldest_token(user.uuid)
-        await self._cache.set_token(user.uuid, tokens.refresh)
+        user_claims = UserClaims(user_uuid=str(user.uuid), role_uuid=str(user.role_uuid))
+        await self._token.base_login(user_claims)
 
         await self._history_repository.create(
             RequestLoginHistory(
@@ -102,15 +98,11 @@ class TokenService:
                 detail="Fake token",
             )
 
-        user_data = UserClaims(
+        user_claims = UserClaims(
             user_uuid=raw_jwt.get("user_uuid"),
             role_uuid=raw_jwt.get("role_uuid"),
         )
-        tokens = await self._token.create_tokens(user_data)
-
-        await self._token.set_tokens_to_cookies(tokens)
-        await self._cache.delete_tokens(user_data.user_uuid, token)
-        await self._cache.set_token(user_data.user_uuid, tokens.refresh)
+        await self._token.base_login(user_claims)
 
     @staticmethod
     def verify(request: Request):

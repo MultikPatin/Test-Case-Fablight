@@ -9,9 +9,8 @@ from src.models.api.v1.users import (
     ResponseUser,
     ResponseUserShort,
     ResponseUsersPaginated,
-    ResponseUserExtended,
 )
-from src.models.api.v1.users_additional import ResponseUserRole, RequestPasswordChange
+from src.models.api.v1.users_additional import RequestPasswordChange
 from src.models.api.v1.base import ResponseString
 
 __all__ = [
@@ -23,8 +22,6 @@ __all__ = [
     "ResponseUser",
     "ResponseUserShort",
     "ResponseUsersPaginated",
-    "ResponseUserExtended",
     "RequestPasswordChange",
-    "ResponseUserRole",
     "ResponseString",
 ]

@@ -1,11 +1,5 @@
 from pydantic import BaseModel, Field, SecretStr
 
-from src.auth.models.api.base import UUIDMixin
-from src.auth.models.api.v1.roles import ResponseRole
-
-
-class ResponseUserRole(UUIDMixin):
-    role: ResponseRole
 
 
 class RequestPasswordChange(BaseModel):

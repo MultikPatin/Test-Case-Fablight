@@ -32,8 +32,6 @@ class TimeMixin(BaseModel):
         examples=["2024-04-19T19:17:31.711Z"],
     )
 
-    class Meta:
-        abstract = True
 
 
 class LoginMixin(BaseModel):

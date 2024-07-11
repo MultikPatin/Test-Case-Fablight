@@ -1,26 +1,25 @@
 services:
 
   postgres:
-    build:
-      dockerfile: postgres_extensions/Dockerfile
-    container_name: ${AUTH_POSTGRES_HOST}
+    container_name: ${POSTGRES_HOST}
+    image: postgres:${POSTGRES_VERSION}
     restart: always
     environment:
-      - POSTGRES_DB=${AUTH_POSTGRES_DB}
-      - POSTGRES_USER=${AUTH_POSTGRES_USER}
-      - POSTGRES_PASSWORD=${AUTH_POSTGRES_PASSWORD}
-      - POSTGRES_HOST=${AUTH_POSTGRES_HOST}
-      - POSTGRES_PORT=${AUTH_POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -h ${AUTH_POSTGRES_HOST}" ]
+      test: [ "CMD-SHELL", "pg_isready -h ${POSTGRES_HOST}" ]
       interval: 10s
       timeout: 3s
       retries: 3
       start_period: 5s
     ports:
-      - "${AUTH_POSTGRES_PORT_LOCAL}:${AUTH_POSTGRES_PORT}"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     networks:
       - services
 
@@ -31,14 +30,11 @@ services:
     environment:
       - LOCAL=False
       - DEBUG=False
-      - AUTH_POSTGRES_DB=${AUTH_POSTGRES_DB}
-      - AUTH_POSTGRES_USER=${AUTH_POSTGRES_USER}
-      - AUTH_POSTGRES_USER=${AUTH_POSTGRES_USER}
-      - AUTH_POSTGRES_PASSWORD=${AUTH_POSTGRES_PASSWORD}
-      - AUTH_POSTGRES_HOST=${AUTH_POSTGRES_HOST}
-      - AUTH_POSTGRES_PORT=${AUTH_POSTGRES_PORT}
-      - AUTH_POSTGRES_HOST_LOCAL=${AUTH_POSTGRES_HOST_LOCAL}
-      - AUTH_POSTGRES_PORT_LOCAL=${AUTH_POSTGRES_PORT_LOCAL}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     depends_on:
       postgres:
         condition: service_healthy
@@ -46,12 +42,12 @@ services:
       - services
 
   redis:
-    container_name: ${AUTH_REDIS_HOST}
+    container_name: ${REDIS_HOST}
     image: redis:${REDIS_VERSION}
     restart: always
     environment:
-      - REDIS_HOST=${AUTH_REDIS_HOST}
-      - REDIS_PORT=${AUTH_REDIS_PORT}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
     volumes:
       - redis_data:/var/lib/redis/data
     healthcheck:
@@ -61,7 +57,7 @@ services:
       retries: 3
       start_period: 1s
     ports:
-      - "${AUTH_REDIS_PORT_LOCAL}:${AUTH_REDIS_PORT}"
+      - "${REDIS_PORT}:${REDIS_PORT}"
     networks:
       - services
 

@@ -5,18 +5,18 @@ from async_fastapi_jwt_auth import AuthJWT
 from async_fastapi_jwt_auth.auth_jwt import AuthJWTBearer
 from fastapi import Depends, HTTPException, Request
 
-from src.cache import RedisCache, get_redis
-from src.auth.models.api.v1.login_history import RequestLoginHistory
-from src.auth.models.api.v1.tokens import RequestLogin
-from src.auth.models.api.v1.users import ResponseUser
-from src.auth.models.db.token import UserClaims
+from src.cache.redis import RedisCache, get_redis
+from src.models.api.v1.login_history import RequestLoginHistory
+from src.models.api.v1.tokens import RequestLogin
+from src.models.api.v1.users import ResponseUser
+from src.models.token import UserClaims
 from src.utils.tokens import TokenUtils, get_token_utils
-from src.auth.validators.token import validate_token
-from src.auth.db.repositories import (
+from src.validators.token import validate_token
+from src.db.repositories.login_history import (
     LoginHistoryRepository,
     get_login_history_repository,
 )
-from src.auth.db.repositories import UserRepository, get_user_repository
+from src.db.repositories.user import UserRepository, get_user_repository
 
 auth_dep = AuthJWTBearer()
 

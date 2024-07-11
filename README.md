@@ -3,7 +3,6 @@
 -----
 [![Python](https://img.shields.io/badge/Python-3.9|3.10|3.11-blue?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![pydantic](https://img.shields.io/badge/pydantic-2.6.3-blue?style=flat&logo=python&logoColor=white)](https://pypi.org/project/pydantic/2.6.3/)
-[![backoff](https://img.shields.io/badge/backoff-2.2.1-blue?style=flat&logo=python&logoColor=white)](https://pypi.org/project/backoff/2.2.1/)
 
 [![fastapi](https://img.shields.io/badge/fastapi-0.110.0-blue?style=flat&logo=python&logoColor=white)](https://pypi.org/project/fastapi/0.110.0/)
 [![fastapi limiter](https://img.shields.io/badge/fastapi_limiter-0.1.6-blue?style=flat&logo=python&logoColor=white)](https://pypi.org/project/fastapi_limiter/0.1.6/)
@@ -27,17 +26,15 @@
 [![pre-commit](https://img.shields.io/badge/pre_commit-used-green?style=flat&logo=python&logoColor=white)](https://pypi.org/project/pre_commit/)
 [![mypy](https://img.shields.io/badge/mypy-used-green?style=flat&logo=python&logoColor=white)](https://pypi.org/project/mypy/)
 
-
 ## Описание
 
 Сервис авторизации и аутентификации с возможностью работы с JWT токенами.
-
 
 ## Инструкция по развёртыванию проекта
 
 * клонировать проект на компьютер
     ```bash
-    git clone git@github.com:MultikPatin/Auth-service.git
+    git clone git@github.com:MultikPatin/Test-Case-Fablight.git
     ```
 * Установить менеджер зависимостей poetry
     ```bash
@@ -49,17 +46,12 @@
     ```
 * установить зависимости
     ```bash
-    poetry install --all-extras --with dev --with test
+    poetry install --all-extras --with dev
     ```
-Сервис реализован в контейнерах Docker  
+
+Сервис реализован в контейнерах Docker
 
 * запуск docker-compose
     ```bash
     docker-compose up -d -f docker-compose.yml
-    ```
-Для выполнения тестов в контейнерах Docker  
-
-* запуск docker-compose
-    ```bash
-    docker-compose up -d -f docker-compose.test.yml
     ```

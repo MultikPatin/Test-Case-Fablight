@@ -28,7 +28,7 @@ async def login(
     Issuing a JWT token
 
     Returns:
-    - **StringRepresent**: Status code with message "The login was completed successfully"
+    - **ResponseUser**: Status code with message "The login was completed successfully"
     """
     return await token_service.login(body, request)
 
@@ -53,7 +53,7 @@ async def logout(
     Removing a JWT token
 
     Returns:
-    - **StringRepresent**: Status code with message "RefreshToken has been deleted,
+    - **ResponseString**: Status code with message "RefreshToken has been deleted,
                             expired or does not exist"
     """
     if isinstance(for_all_sessions, int):
@@ -80,7 +80,7 @@ async def refresh_token(
     JWT refresh
 
     Returns:
-    - **StringRepresent**: Status code with message "The refresh was completed successfully"
+    - **ResponseString**: Status code with message "The refresh was completed successfully"
     """
     await token_service.refresh(request)
     return ResponseString(
@@ -103,7 +103,7 @@ async def verify_token(
     Verify access token
 
     Returns:
-    - **StringRepresent**: Status code with message "The token is valid"
+    - **ResponseString**: Status code with message "The token is valid"
     """
     token_service.verify(request)
     return ResponseString(code=HTTPStatus.OK, details="The token is valid")

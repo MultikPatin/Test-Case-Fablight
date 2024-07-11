@@ -6,7 +6,7 @@ from src.utils.settings import ServiceSettings
 
 
 class SQLAlchemyConnection(ServiceSettings):
-    database: str
+    db_name: str
     user: str
     password: SecretStr
     sqlalchemy_echo: bool = Field(default=True)
@@ -19,5 +19,5 @@ class SQLAlchemyConnection(ServiceSettings):
             password=self.password.get_secret_value(),
             host=self.correct_host(),
             port=self.correct_port(),
-            database=self.database,
+            database=self.db_name,
         )

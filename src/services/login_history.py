@@ -4,9 +4,9 @@ from uuid import UUID
 
 from fastapi import Depends
 
-from src.auth.models.api.v1.login_history import RequestLoginHistory
-from src.auth.models.db.login_history import LoginHistoryDB
-from src.auth.db.repositories import (
+from src.models.api.v1.login_history import RequestLoginHistory
+from src.models.db.login_history import LoginHistoryDB
+from src.db.repositories.login_history import (
     LoginHistoryRepository,
     get_login_history_repository,
 )

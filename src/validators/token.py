@@ -10,7 +10,7 @@ from jwt import (
 from src.configs import settings
 
 
-def validate_token(token: str | bytes) -> dict[str, str] | None:
+def validate_token(token: str | bytes) -> dict[str, str]:
     try:
         raw_jwt = decode(
             jwt=token,
